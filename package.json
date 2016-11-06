@@ -2,10 +2,10 @@
   "name": "ichat-analysis",
   "version": "1.0.0",
   "description": "An Electron app for visualization and analysis of iMessage conversation history",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
-    "app": "electron .",
-    "debug": "index.js",
+    "webapp": "$(npm bin)/electron src",
+    "start": "node src/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
