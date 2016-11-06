@@ -1,1 +1,3 @@
-console.log("Hello world");
+import ChatDBManager from './model/ChatDBManager';
+
+let chatManager = new ChatDBManager();
