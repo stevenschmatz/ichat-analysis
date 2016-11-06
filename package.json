@@ -1,0 +1,24 @@
+{
+  "name": "ichat-analysis",
+  "version": "1.0.0",
+  "description": "An Electron app for visualization and analysis of iMessage conversation history",
+  "main": "app.js",
+  "scripts": {
+    "app": "electron .",
+    "debug": "index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stevenschmatz/ichat-analysis.git"
+  },
+  "author": "Steven Schmatz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/stevenschmatz/ichat-analysis/issues"
+  },
+  "homepage": "https://github.com/stevenschmatz/ichat-analysis#readme",
+  "dependencies": {
+    "electron": "^1.4.5"
+  }
+}
