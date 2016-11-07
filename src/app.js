@@ -10,7 +10,7 @@ function main() {
   let chatManager = new ChatDBManager();
   const identifier = nconf.get("debugEmail");
 
-  chatManager.getWordFrequencies(identifier).then(result => {
+  chatManager.getLongestMessages(identifier).then(result => {
     console.log(result);
   });
 }

@@ -123,4 +123,26 @@ export default class ChatDBManager {
       });
     });
   }
+
+  /**
+   * Returns a list of the longest messages for a given conversation.
+   * @param {string} identifier the ID of the conversation recipient
+   * @return {Promise<array>} an array of objects of the messages.
+   */
+  getLongestMessages(identifier) {
+    return new Promise((resolve, reject) => {
+      this.getAllMessagesForIdentifier(identifier).then(messages => {
+        const sortedMessages = messages.sort((a, b) => b.text.length - a.text.length);
+        const result = sortedMessages.filter(msg => !msg.attachment).map(msg => {
+          return {
+            text: msg.text,
+            is_from_me: msg.is_from_me
+          };
+        });
+        resolve(result);
+      }).catch(err => {
+        reject(err);
+      });
+    });
+  }
 }
