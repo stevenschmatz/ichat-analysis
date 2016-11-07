@@ -10,7 +10,7 @@ function main() {
   let chatManager = new ChatDBManager();
   const identifier = nconf.get("debugEmail");
 
-  chatManager.getLongestMessages(identifier).then(result => {
+  chatManager.getMeanSentiment(identifier).then(result => {
     console.log(result);
   });
 }

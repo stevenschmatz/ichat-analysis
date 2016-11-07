@@ -3,6 +3,7 @@
 import process from 'process';
 import path from 'path';
 import nconf from 'nconf';
+import sentiment from 'sentiment';
 
 const sqlite3 = require('sqlite3').verbose();
 
@@ -140,6 +141,28 @@ export default class ChatDBManager {
           };
         });
         resolve(result);
+      }).catch(err => {
+        reject(err);
+      });
+    });
+  }
+
+  /**
+   * Returns the mean sentiment of an individual conversation.
+   * @param {string} identifier the ID of the conversation recipient
+   * @return {Promise<number>} the average sentiment score of the conversation
+   */
+  getMeanSentiment(identifier) {
+    return new Promise((resolve, reject) => {
+      this.getAllMessagesForIdentifier(identifier).then(messages => {
+        const sentiments = messages.map(msg => {
+          const result = sentiment(msg.text);
+          return result.score;
+        });
+
+        const mean = sentiments.reduce((a, b) => a + b, 0) / sentiments.length;
+
+        resolve(mean);
       }).catch(err => {
         reject(err);
       });

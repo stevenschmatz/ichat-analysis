@@ -21,6 +21,7 @@
   "dependencies": {
     "electron": "^1.4.5",
     "nconf": "^0.8.4",
+    "sentiment": "^2.1.0",
     "sqlite3": "^3.1.8"
   },
   "devDependencies": {
