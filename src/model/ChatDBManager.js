@@ -6,6 +6,10 @@ import nconf from 'nconf';
 
 const sqlite3 = require('sqlite3').verbose();
 
+/**
+ * @class ChatDBManager
+ * A convenience wrapper for the iMessage database.
+ **/
 export default class ChatDBManager {
   constructor() {
     let dbPath;
@@ -19,6 +23,11 @@ export default class ChatDBManager {
     this.db = new sqlite3.Database(dbPath, sqlite3.OPEN_READONLY);
   }
 
+  /**
+   * Performs the SQL query with the given text.
+   * @param {string} query the SQL query
+   * @return {Promise}
+   */
   query(query) {
     return new Promise((resolve, reject) => {
       this.db.all(query, (err, result) => {
@@ -31,17 +40,10 @@ export default class ChatDBManager {
     });
   }
 
-  debug() {
-    const query = "SELECT text FROM message LIMIT 10";
-
-    this.query(query).then(result => {
-      const messages = result.map(row => row.text);
-      console.log(messages);
-    }).catch(err => {
-      console.log(err);
-    });
-  }
-
+  /**
+   * Returns a list of the IDs of all conversation recipients.
+   * @return {Promise<array>} an array of strings of recipient IDs.
+   */
   allChatIdentifiers() {
     const query = "SELECT chat_identifier FROM chat";
     
@@ -57,7 +59,7 @@ export default class ChatDBManager {
   /**
    * Returns all message data for the given identifier.
    * @param {string} identifier the ID of the conversation recipient
-   * @return {array} an array of (is_from_me, text) pairs for the given person.
+   * @return {Promise<array>} an array of (is_from_me, text) pairs for the given person.
    */
   getAllMessagesForIdentifier(identifier) {
     const query = `
@@ -89,7 +91,7 @@ export default class ChatDBManager {
   /**
    * Generates an array of the word frequencies, sorted by most first.
    * @param {string} identifier the ID of the conversation recipient
-   * @return {array} An array of (word, count) pairs.
+   * @return {Promise<array>} An array of (word, count) pairs.
    */
   getWordFrequencies(identifier) {
     return new Promise((resolve, reject) => {
