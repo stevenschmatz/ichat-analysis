@@ -10,8 +10,8 @@ function main() {
   let chatManager = new ChatDBManager();
   const identifier = nconf.get("debugEmail");
 
-  chatManager.getAllMessagesForIdentifier(identifier).then(messageData => {
-    console.log(messageData.length);
+  chatManager.getWordFrequencies(identifier).then(result => {
+    console.log(result);
   });
 }
 

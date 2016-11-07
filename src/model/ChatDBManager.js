@@ -85,4 +85,40 @@ export default class ChatDBManager {
       });
     });
   }
+
+  /**
+   * Generates an array of the word frequencies, sorted by most first.
+   * @param {string} identifier the ID of the conversation recipient
+   * @return {array} An array of (word, count) pairs.
+   */
+  getWordFrequencies(identifier) {
+    return new Promise((resolve, reject) => {
+      this.getAllMessagesForIdentifier(identifier).then(messages => {
+        let stats = {};
+
+        messages.filter(msg => !msg.attachment).map(messageData => {
+
+          const text = messageData.text;
+          const cleanText = text.replace(/[\.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+          const words = cleanText.split(/\s/);
+
+          words.map(rawWord => {
+            const word = rawWord.toLowerCase();
+            stats[word] = stats[word] || 0;
+            stats[word]++;
+          });
+        });
+
+        const words = Object.keys(stats);
+        const data = words.sort((a, b) => stats[b] - stats[a]).map(word => {
+          return {word: word, count: stats[word]};
+        });
+
+        resolve(data);
+
+      }).catch(err => {
+        reject(err);
+      });
+    });
+  }
 }
