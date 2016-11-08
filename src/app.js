@@ -10,8 +10,10 @@ function main() {
   let chatManager = new ChatDBManager();
   const identifier = nconf.get("debugEmail");
 
-  chatManager.getMeanSentiment(identifier).then(result => {
-    console.log(result);
+  chatManager.getConversationMeanSentimentScores(identifier).then(result => {
+    console.log(result.reverse());
+  }).catch(err => {
+    console.log(`ERROR: ${err}`);
   });
 }
 

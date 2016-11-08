@@ -106,9 +106,11 @@ export default class ChatDBManager {
           const words = cleanText.split(/\s/);
 
           words.map(rawWord => {
-            const word = rawWord.toLowerCase();
-            stats[word] = stats[word] || 0;
-            stats[word]++;
+            if (typeof rawWord === "string") {
+              const word = rawWord.toLowerCase();
+              stats[word] = stats[word] || 0;
+              stats[word]++;
+            }
           });
         });
 
@@ -155,9 +157,14 @@ export default class ChatDBManager {
   getMeanSentiment(identifier) {
     return new Promise((resolve, reject) => {
       this.getAllMessagesForIdentifier(identifier).then(messages => {
+
         const sentiments = messages.map(msg => {
-          const result = sentiment(msg.text);
-          return result.score;
+          if (msg.text == null) {
+            return 0;
+          } else {
+            const result = sentiment(msg.text);
+            return result.score;
+          }
         });
 
         const mean = sentiments.reduce((a, b) => a + b, 0) / sentiments.length;
@@ -166,6 +173,30 @@ export default class ChatDBManager {
       }).catch(err => {
         reject(err);
       });
+    });
+  }
+
+  getConversationMeanSentimentScores() {
+    return new Promise((resolve, reject) => {
+      this.allChatIdentifiers().then(identifiers => {
+        Promise.all(identifiers.map(id => this.getMeanSentiment(id))).then(values => {
+          const sentimentData = values.map((value, index) => {
+            return {
+              id: identifiers[index],
+              score: value
+            };
+          });
+
+          const sortedSentimentData = sentimentData.sort((a, b) => {return b.score - a.score});
+
+          resolve(sortedSentimentData);
+          
+        }).catch(err => {
+          reject(err);
+        });
+      }).catch(err => {
+        reject(err);
+      })
     });
   }
 }
